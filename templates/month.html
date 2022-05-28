@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <a href="{% url 'MonthCalenderApp:month' month_previous.year month_previous.month %}">前月</a>
+    {{ month_current | date:"Y年m月" }}<!--2018年06月 のように表示-->
+    <a href="{% url 'MonthCalenderApp:month' month_next.year month_next.month %}">次月</a>
+
+    <table class="table">
+        <thead>
+        <tr>
+            {% for w in week_names %}
+                <th>{{ w }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+            <!--月の全ての日付は、2次元なリストなので、forで2回回す必要があります。-->
+            {% for week in month_days %}
+                <tr>
+                    {% for day in week %}
+                        {% if now == day %}<!--その日が今日なら、という意味です。今日ならtrタグに色をつけます。-->
+                            <td class="table-success">
+                        {% else %}
+                            <td>
+                        {% endif %}
+    
+                        {% if month_current.month != day.month %}<!--は、月を跨いだ日付なら分かりやすくするために6/1 のように表示させています。-->
+                            {{ day | date:"m/d" }}
+                        {% else %}
+                            {{ day.day }}
+                        {% endif %}
+    
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+    </table>
+{% endblock content %}
